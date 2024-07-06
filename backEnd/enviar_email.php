@@ -2,17 +2,15 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-require 'vendor/autoload.php';
-
 if (
 	isset($_POST['nome']) and !empty($_POST['nome']) and
 	isset($_POST['email']) and !empty($_POST['email']) and
 	isset($_POST['mensagem']) and !empty($_POST['mensagem'])
 ) {
-	$nome = ucfirst(strtolower(addcslashes($_POST['nome'])));
-	$email = ucfirst(strtolower(addcslashes($_POST['email'])));
-	$mensagem = ucfirst(strtolower(addcslashes($_POST['mensagem'])));
-	$whatsapp = ucfirst(strtolower(addcslashes($_POST['whatsapp'])));
+	$nome = ucfirst(strtolower(addslashes($_POST['nome'])));
+	$email = ucfirst(strtolower(addslashes($_POST['email'])));
+	$mensagem = ucfirst(strtolower(addslashes($_POST['mensagem'])));
+	$whatsapp = ucfirst(strtolower(addslashes($_POST['whatsapp'])));
 
 	$mensagem = "
 		Nome: $nome, <br/>
@@ -21,34 +19,23 @@ if (
 		Mensagem: $mensagem <br/>
 	";
 
-	return enviar_email($mensagem);
+	$assunto = "Envio de mensagem através do portifólio.";
+	$destinatario = "edmoreira.sza@gmail.com";
+	$nomeRemetente = $nome;
+	$emailRemetente = "contato@eddumoreira.com";
+	$telefoneRemetente = "31 9 9335-9455";
 
-} else {
-	print "<script>alert('Preencha os campos obrigatórios!');</script>";
-	print "<script>window.location.href = `../index.html`;</script>";
-	return false;
-}
-function enviar_email($mensagem)
-{
-	ini_set('display_errors', 1);
-	error_reporting(E_ALL);
+	date_default_timezone_set('America/Sao_Paulo');
 
-	$mail = new PHPMailer;
+	$dia = date('d');
+	$hora = date('h:i:s');
 
-	$mail -> isSMTP();
-	$mail -> SMTPDebug = 2;
-	$mail -> Host = 'smtp.hostinger.com';
-	$mail -> Port = 465;
-	$mail -> SMTPAuth = true;
-	$mail -> Username = 'contato@eddumoreira.com';
-	$mail -> Password = '';
-	$mail -> setFrom('contato@eddumoreira.com', 'Eduardo Moreira');
-	$mail -> addAddress('edmoreira.sza@gmail.com', 'Eduardo Moreira');
-	$mail -> Subject = "E-mail enviado a partir do seu portifólio pessoal!";
-	$mail -> Body = $mensagem;
+	$remetente  = 'MIME-Version: 1.0' . "\r\n";
+	$remetente .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+	$remetente .= 'From: ' . $emailRemetente;
 
 	try {
-		$mail -> send();
+		mail($destinatario, $assunto, $mensagem, $remetente);
 		print "<script>alert('Mensagem enviada com sucesso!');</script>";
 		print "<script>window.location.href = `../index.html`;</script>";
 		return true;
@@ -57,6 +44,11 @@ function enviar_email($mensagem)
 		print "<script>window.location.href = `../index.html`;</script>";
 		return false;
 	}
+
+} else {
+	print "<script>alert('Preencha os campos obrigatórios!');</script>";
+	print "<script>window.location.href = `../index.html`;</script>";
+	return false;
 }
 
 ?>
