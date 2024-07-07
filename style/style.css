@@ -279,6 +279,7 @@ section.sobre {
 section.sobre .flex {
     align-items: center;
     gap: 60px;
+    text-align: center;
 }
 
 .sobre .txt-sobre h2 {
@@ -299,8 +300,8 @@ section.sobre .flex {
 }
 
 .sobre .img-sobre-eu {
-    height: 320px;
-    width: 320px;
+    height: 300px;
+    width: 300px;
     border-radius: 50px;
     box-shadow: 0 0 8px #00ff08;
 }
